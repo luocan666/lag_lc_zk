@@ -29,7 +29,7 @@ class SingleControlEnv(BaseEnv):
         self.task.reset(self)
         obs = self.get_obs()
         return self._pack(obs)
-
+# todo:
     def reset_simulators(self):
         if self.init_states is None:
             self.init_states = [sim.init_state.copy() for sim in self.agents.values()]

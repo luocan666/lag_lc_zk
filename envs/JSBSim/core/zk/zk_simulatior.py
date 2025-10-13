@@ -33,6 +33,8 @@ class Aircraft:
         self.lat_limit = lat_limit
         self.lon_limit = lon_limit
         self.out_side_time = 0
+        self.start_position = None
+        self.start = False
 
         # --- 状态数据模块 ---
         # 初始化飞机各系统状态的子类实例
@@ -53,6 +55,7 @@ class Aircraft:
         self._position = np.zeros(3)  # 本地坐标 (北, 东, 上)，单位: [米, 米, 米]
         self._posture = np.zeros(3)  # 姿态角 (滚转, 俯仰, 偏航)，单位: [弧度, 弧度, 弧度]
         self._velocity = np.zeros(3)  # 本地速度 (北向, 东向, 上向)，单位: [米/秒]
+        self.position_history = []
 
         # --- 关系与交互 ---
         self.partners: List['Aircraft'] = []  # 友机列表, 通讯模式0-0下全部友军
@@ -126,8 +129,12 @@ class Aircraft:
                 obj, attr_name = self._attribute_map[key]
                 setattr(obj, attr_name, value)
 
+
         # 在所有基础参数更新后，调用辅助函数来更新派生参数
         self._update_derived_parameters()
+        if self.start == False:
+            self.start_position = (self.get_position()[0],self.get_position()[1])
+            self.start = True
 
     def get(self, key: str):
         """

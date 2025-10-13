@@ -267,7 +267,7 @@ def singleArgs():
         '--experiment-name', exp,
         '--seed', str(seed),
         '--n-training-threads', '1',
-        '--n-rollout-threads', '16',  #
+        '--n-rollout-threads', '1',  #
         '--cuda',
         '--log-interval', '1',
         '--save-interval', '1',
@@ -303,5 +303,5 @@ if __name__ == "__main__":
 
 
     # main(multArgs())
-    # main(singleArgs())
-    main(sys.argv[1:])
+    main(singleArgs())
+    # main(sys.argv[1:])

@@ -4,6 +4,9 @@ import torch
 from envs.JSBSim.model.baseline_actor import BaselineActor
 from envs.JSBSim.reward_functions.zk.zk_altitude_reward import ZKAltitudeReward
 from envs.JSBSim.reward_functions.zk.zk_event_driven_reward import ZKEventDrivenReward
+from envs.JSBSim.reward_functions.heading_reward import HeadingReward
+from envs.JSBSim.reward_functions.area_exploration_reward import AreaExplorationReward
+from envs.JSBSim.reward_functions.energy_reward import EnergyReward
 from envs.JSBSim.tasks import HierarchicalSingleCombatTask, SingleCombatShootMissileTask, SingleCombatTask
 
 from gymnasium import spaces
@@ -26,8 +29,8 @@ class ZKHierarchicalSingleCombatShootTask(SingleCombatTask):
 
 
         self.reward_functions = [
-            ZKAltitudeReward(self.config),
-            ZKEventDrivenReward(self.config)
+            AreaExplorationReward(self.config),
+            EnergyReward(self.config)
         ]
         self.termination_conditions = [
             ZKSafeReturn(self.config),

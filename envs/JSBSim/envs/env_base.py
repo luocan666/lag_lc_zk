@@ -102,6 +102,7 @@ class BaseEnv(gymnasium.Env):
         self.current_step = 0
         for sim in self._jsbsims.values():
             sim.reload()
+
         self._tempsims.clear()
         # reset task
         self.task.reset(self)

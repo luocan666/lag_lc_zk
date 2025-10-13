@@ -549,7 +549,8 @@ class MixedCatalog(dict):
         Args:
             jsbsim_props (list): list of 'name_jsbsim (access)' of jsbsim properties
         """
-        for jsbsim_prop in jsbsim_props:
+        jsbsim_props_tmp=jsbsim_props.split("\n")
+        for jsbsim_prop in jsbsim_props_tmp:
             if jsbsim_prop.strip() == "":
                 continue  # skip empty line
             [name_jsbsim, access] = jsbsim_prop.split(" ")

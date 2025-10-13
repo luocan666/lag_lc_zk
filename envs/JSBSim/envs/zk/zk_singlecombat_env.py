@@ -15,6 +15,10 @@ class ZKSingleCombatEnv(ZKBaseEnv):
     """
     def __init__(self, config_name: str, port):
         super().__init__(config_name, port)
+        self.Pre_SE = {
+            "red_0":0,
+            "blue_0":0
+        }
         # Env-Specific initialization here!
 
 
@@ -49,6 +53,10 @@ class ZKSingleCombatEnv(ZKBaseEnv):
             share_obs (dict): {agent_id: initial state}
         """
         self.current_step = 0
+        self.Pre_SE = {
+            "red_0": 0,
+            "blue_0": 0
+        }
         self._zk_sims.clear()
         self._zk_missiles.clear()
         # self.reset_simulators()
@@ -106,13 +114,23 @@ class ZKSingleCombatEnv(ZKBaseEnv):
 
         rewards = {}
         for agent_id in self.agents.keys():
+            self.agents[agent_id].position_history.append((self.current_step,
+                                                           self.agents[agent_id].get_position()[0],
+                                                           self.agents[agent_id].get_position()[1]))
             reward, info = self.task.get_reward(self, agent_id, info)
             rewards[agent_id] = [reward]
         #
         dones = {}
         for agent_id in self.agents.keys():
+            agent = self.agents[agent_id]
+            v = agent.get('velocities/mach') * 340
+            h = agent.get('position/h-sl-ft') * 0.3048
+            self.Pre_SE[agent_id] = (v ** 2) / 19.62 + h
             done, info = self.task.get_termination(self, agent_id, info)
             dones[agent_id] = [done]
+
+
+
 
         return self._pack(obs), self._pack(rewards), self._pack(dones), info
 

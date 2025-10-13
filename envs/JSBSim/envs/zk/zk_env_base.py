@@ -183,7 +183,7 @@ class ZKBaseEnv(BaseEnv):
             shoot_flag = shoot_interval > self.min_attack_interval and norm_action[4] == 1 and \
                          rule_decide['fcs/weapon-launch'] == 1
             if shoot_flag:
-                print(shoot_interval)
+                # print(shoot_interval)
                 self._last_shoot_time[agent_id] = self.current_step
             # print("action：{}".format(norm_action[:]))
             # 构建动作命令
@@ -436,6 +436,7 @@ class ZKBaseEnv(BaseEnv):
                     "ic/phi-deg": 0, "ic/theta-deg": 0,
                     "ic/roc-fpm": 0, "ic/psi-true-deg": blue_psi
                 }
+
         return reset_attribute
 
     def render(self, mode="txt", filepath='./JSBSimRecording.txt.acmi', tacview=None):
