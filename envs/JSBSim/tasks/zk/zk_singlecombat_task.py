@@ -8,7 +8,7 @@ from envs.JSBSim.reward_functions.heading_reward import HeadingReward
 from envs.JSBSim.reward_functions.area_exploration_reward import AreaExplorationReward
 from envs.JSBSim.reward_functions.energy_reward import EnergyReward
 from envs.JSBSim.tasks import HierarchicalSingleCombatTask, SingleCombatShootMissileTask, SingleCombatTask
-
+from envs.JSBSim.reward_functions.fastexplorationreward import FastExplorationReward
 from gymnasium import spaces
 
 from envs.JSBSim.termination_conditions.zk.zk_safe_return import ZKSafeReturn
@@ -29,7 +29,7 @@ class ZKHierarchicalSingleCombatShootTask(SingleCombatTask):
 
 
         self.reward_functions = [
-            AreaExplorationReward(self.config),
+            FastExplorationReward(self.config),
             EnergyReward(self.config)
         ]
         self.termination_conditions = [
