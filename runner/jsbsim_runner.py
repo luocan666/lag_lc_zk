@@ -4,7 +4,7 @@ import logging
 import numpy as np
 from typing import List
 from .base_runner import Runner, ReplayBuffer
-
+from gymnasium import spaces
 
 def _t2n(x):
     return x.detach().cpu().numpy()

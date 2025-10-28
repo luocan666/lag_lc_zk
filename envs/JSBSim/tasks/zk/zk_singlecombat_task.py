@@ -13,6 +13,7 @@ from gymnasium import spaces
 
 from envs.JSBSim.termination_conditions.zk.zk_safe_return import ZKSafeReturn
 from envs.JSBSim.termination_conditions.zk.zk_timeout import ZKTimeout
+from envs.JSBSim.termination_conditions.zk.zk_find_return import ZKFindReturn
 from envs.JSBSim.utils.utils import get_root_dir, LLA2NEU, get_AO_TA_R
 
 
@@ -33,12 +34,13 @@ class ZKHierarchicalSingleCombatShootTask(SingleCombatTask):
             EnergyReward(self.config)
         ]
         self.termination_conditions = [
+            ZKFindReturn(self.config),
             ZKSafeReturn(self.config),
             ZKTimeout(self.config),
         ]
 
     def load_observation_space(self):
-        self.observation_space = spaces.Box(low=-10, high=10., shape=(22,))
+        self.observation_space = spaces.Box(low=-10, high=10., shape=(9,))
 
     def load_action_space(self):
         # altitude control + heading control + velocity control + shoot control
@@ -75,7 +77,7 @@ class ZKHierarchicalSingleCombatShootTask(SingleCombatTask):
                    - [19] relative distance
                    - [20] side flag
                """
-        norm_obs = np.zeros(22)
+        norm_obs = np.zeros(9)
         # (1) ego info normalization
         agent = env.agents[agent_id]
         agent_feature = np.hstack([agent.get_position(), agent.get_velocity()])
@@ -94,35 +96,35 @@ class ZKHierarchicalSingleCombatShootTask(SingleCombatTask):
         norm_obs[7] = agent.get("velocities/w-fps") / 1116.44  # 7. ego v_body_z   (unit: mh)
         norm_obs[8] = agent.get("velocities/ve-fps") / 1116.44 # 8. ego vc   (unit: mh)(unit: 5G)
         # (2) relative inof w.r.t partner+enemies state
-        offset = 8
-        sim = env.agents[agent_id].enemies[0]
-        sim_geodetic = sim.get_geodetic()
-        # cur_ned = LLA2NEU(*state[:3], env.center_lon, env.center_lat, env.center_alt)
-        # feature = np.array([*cur_ned, *(state[6:9])])
-        sim_feature = np.hstack([sim.get_position(), sim.get_velocity()])
-        AO, TA, R, side_flag = get_AO_TA_R(agent_feature, sim_feature, return_side=True)
-        # print("距离R:{}".format(R))
-        norm_obs[offset + 1] = (sim.get("velocities/u-fps") - agent.get("velocities/u-fps")) / 1116.44
-        norm_obs[offset + 2] = (sim_geodetic[2] - geodetic[2]) / 1000
-        norm_obs[offset + 3] = AO
-        norm_obs[offset + 4] = TA
-        norm_obs[offset + 5] = R / 10000
-        norm_obs[offset + 6] = side_flag
-        norm_obs[offset + 7] = 1 #剩余弹量
-        offset += 6
-        norm_obs = np.clip(norm_obs, self.observation_space.low, self.observation_space.high)
-        # (3) missile info TODO: multiple missile and parnter's missile?
-        missile_sim = env.agents[agent_id].check_missile_warning()  #
-        if missile_sim is not None:
-            missile_sim_geodetic = missile_sim.get_geodetic()
-            missile_feature = np.hstack([missile_sim.get_position(), missile_sim.get_velocity()])
-            ego_AO, ego_TA, R, side_flag = get_AO_TA_R(agent_feature, missile_feature, return_side=True)
-            norm_obs[offset + 1] = (missile_sim.get("Speed") - agent.get("velocities/u-fps")) / 1116.44
-            norm_obs[offset + 2] = (missile_sim_geodetic[2] - geodetic[2]) / 1000
-            norm_obs[offset + 3] = ego_AO
-            norm_obs[offset + 4] = ego_TA
-            norm_obs[offset + 5] = R / 10000
-            norm_obs[offset + 6] = side_flag
+        # offset = 8
+        # sim = env.agents[agent_id].enemies[0]
+        # sim_geodetic = sim.get_geodetic()
+        # # cur_ned = LLA2NEU(*state[:3], env.center_lon, env.center_lat, env.center_alt)
+        # # feature = np.array([*cur_ned, *(state[6:9])])
+        # sim_feature = np.hstack([sim.get_position(), sim.get_velocity()])
+        # AO, TA, R, side_flag = get_AO_TA_R(agent_feature, sim_feature, return_side=True)
+        # # print("距离R:{}".format(R))
+        # norm_obs[offset + 1] = (sim.get("velocities/u-fps") - agent.get("velocities/u-fps")) / 1116.44
+        # norm_obs[offset + 2] = (sim_geodetic[2] - geodetic[2]) / 1000
+        # norm_obs[offset + 3] = AO
+        # norm_obs[offset + 4] = TA
+        # norm_obs[offset + 5] = R / 10000
+        # norm_obs[offset + 6] = side_flag
+        # norm_obs[offset + 7] = 1 #剩余弹量
+        # offset += 6
+        # norm_obs = np.clip(norm_obs, self.observation_space.low, self.observation_space.high)
+        # # (3) missile info TODO: multiple missile and parnter's missile?
+        # missile_sim = env.agents[agent_id].check_missile_warning()  #
+        # if missile_sim is not None:
+        #     missile_sim_geodetic = missile_sim.get_geodetic()
+        #     missile_feature = np.hstack([missile_sim.get_position(), missile_sim.get_velocity()])
+        #     ego_AO, ego_TA, R, side_flag = get_AO_TA_R(agent_feature, missile_feature, return_side=True)
+        #     norm_obs[offset + 1] = (missile_sim.get("Speed") - agent.get("velocities/u-fps")) / 1116.44
+        #     norm_obs[offset + 2] = (missile_sim_geodetic[2] - geodetic[2]) / 1000
+        #     norm_obs[offset + 3] = ego_AO
+        #     norm_obs[offset + 4] = ego_TA
+        #     norm_obs[offset + 5] = R / 10000
+        #     norm_obs[offset + 6] = side_flag
         return norm_obs
 
     def normalize_action(self, env, agent_id, action):

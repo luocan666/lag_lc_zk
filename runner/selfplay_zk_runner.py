@@ -2,6 +2,7 @@ import torch
 import logging
 import numpy as np
 from typing import List
+from gymnasium import spaces
 from .base_runner import Runner, ReplayBuffer
 from .jsbsim_runner import JSBSimRunner
 
