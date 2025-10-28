@@ -39,15 +39,15 @@ def _t2n(x):
 
 num_agents = 2
 render = True
-ego_policy_index = 1240
-enm_policy_index = 1240
+ego_policy_index = 530
+enm_policy_index = 530
 episode_rewards = 0
 # ego_run_dir = "/home/lqh/jyh/CloseAirCombat/scripts/results/SingleCombat/1v1/NoWeapon/HierarchySelfplay/ppo/artillery_check/wandb/latest-run/files"
 # enm_run_dir = "/home/lqh/jyh/CloseAirCombat/scripts/results/SingleCombat/1v1/NoWeapon/HierarchySelfplay/ppo/artillery_check/wandb/latest-run/files"
 
-ego_run_dir = "C:/Users/hyx/PycharmProjects/lag4zkbase/scripts/results/run4"
-enm_run_dir = "C:/Users/hyx/PycharmProjects/lag4zkbase/scripts/results/run4"
-experiment_name = ego_run_dir.split('/')[-4]
+ego_run_dir = r"E:\githubcode\lag_lc_zk\scripts\results\ZKSingleCombat\zk\1v1\HierarchySelfplay\ppo\v1\run25"
+enm_run_dir = r"E:\githubcode\lag_lc_zk\scripts\results\ZKSingleCombat\zk\1v1\HierarchySelfplay\ppo\v1\run25"
+experiment_name = ego_run_dir.split('\\')[-7]
 
 
 scenario_name = "zk/1v1/HierarchySelfplay"
