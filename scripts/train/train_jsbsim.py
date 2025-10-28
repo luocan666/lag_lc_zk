@@ -294,7 +294,7 @@ def singleArgs():
         '--data-chunk-length', '8',
         '--user-name', 'jyh',
         '--wandb-name', 'thu_jsbsim',  # shell脚本中新增的参数
-        '--use-prior','False' # shell脚本中新增的参数
+        '--use-prior'  # shell脚本中新增的参数
     ]
     return cmd_args
 

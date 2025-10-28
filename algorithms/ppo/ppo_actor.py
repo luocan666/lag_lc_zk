@@ -20,7 +20,7 @@ class PPOActor(nn.Module):
         self.recurrent_hidden_size = args.recurrent_hidden_size
         self.recurrent_hidden_layers = args.recurrent_hidden_layers
         self.tpdv = dict(dtype=torch.float32, device=device)
-        self.use_prior = False
+        self.use_prior = args.use_prior
         # (1) feature extraction module
         self.base = MLPBase(obs_space, self.hidden_size, self.activation_id, self.use_feature_normalization)
         # (2) rnn module

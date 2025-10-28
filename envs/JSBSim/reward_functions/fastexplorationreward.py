@@ -16,7 +16,7 @@ class FastExplorationReward(BaseRewardFunction):
         self.lon_limit = (-0.8971999, 0.8971999)  # 经度范围 (min, max)
 
         # 探索核心参数（直接赋值，控制奖励范围）
-        self.grid_resolution = 0.005  # 网格分辨率（度）
+        self.grid_resolution = 0.05  # 网格分辨率（度）
         self.base_new_grid_reward = 1.5  # 新网格基础奖励（核心值，控制整体量级）
         self.repetition_penalty = -0.5  # 重复访问惩罚（绝对值小于基础奖励）
         self.direction_bonus = 0.8  # 向未探索区域移动奖励
